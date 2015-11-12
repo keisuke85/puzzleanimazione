@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Puzzle Animazione</string>
+    <string name="facebook_app_id">919831721435000</string>
 
     <string name="title_section0">Home</string>
     <string name="title_section1">News</string>

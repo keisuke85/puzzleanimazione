@@ -1,6 +1,7 @@
 package it.keisoft.puzzleanimazione;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -14,8 +15,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by mmarcheselli on 05/11/2015.
@@ -32,6 +43,8 @@ public class BaseActivity extends ActionBarActivity {
     protected static int position;
 
     private static boolean isLaunch = true;
+
+    private CallbackManager callbackManager;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -114,10 +127,13 @@ public class BaseActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         if(isLaunch){
+            fbLogin();
+
             isLaunch = false;
             openActivity(0);
         }
     }
+
 
     protected void openActivity(int position){
         mDrawerLayout.closeDrawer(mDrawerList);
@@ -204,5 +220,51 @@ public class BaseActivity extends ActionBarActivity {
             mDrawerLayout.openDrawer(mDrawerList);
         }
     }
+
+    private void fbLogin() {
+        // Facebook Login inizio
+        FacebookSdk.sdkInitialize(getApplicationContext());
+//            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+//                    refresh();
+            }
+
+            @Override
+            public void onCancel() {
+//                if (pendingAction != PendingAction.NONE) {
+//                    showAlert();
+//                    pendingAction = PendingAction.NONE;
+//                }
+                Toast.makeText(getApplicationContext(), "cancel", Toast.LENGTH_SHORT).show();
+//                    refresh();
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+//                    if (/*pendingAction != PendingAction.NONE &&*/ exception instanceof FacebookAuthorizationException) {
+//                        showAlert();
+//                    pendingAction = PendingAction.NONE;
+                //                   }
+                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
+//                   refresh();
+            }
+
+            /*    private void showAlert() {
+                    new AlertDialog.Builder(BaseActivity.this)
+                            .setTitle(R.string.cancelled)
+                            .setMessage(R.string.permission_not_granted)
+                            .setPositiveButton(R.string.ok, null)
+                            .show();
+                }*/
+        });
+        // Facebook Login fine
+
+    }
+
 }
 
