@@ -1,13 +1,10 @@
 package it.keisoft.puzzleanimazione;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +15,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookAuthorizationException;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
@@ -26,12 +22,11 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by mmarcheselli on 05/11/2015.
  */
-public class BaseActivity extends ActionBarActivity {
+public class BaseActivity extends AppCompatActivity {
 
     protected FrameLayout frameLayout;
     protected ListView mDrawerList;
@@ -43,8 +38,6 @@ public class BaseActivity extends ActionBarActivity {
     protected static int position;
 
     private static boolean isLaunch = true;
-
-    private CallbackManager callbackManager;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -60,7 +53,8 @@ public class BaseActivity extends ActionBarActivity {
                 getString(R.string.title_section4),
                 getString(R.string.title_section5),
                 getString(R.string.title_section6),
-                getString(R.string.title_section7)};
+                getString(R.string.title_section7),
+                getString(R.string.action_settings)};
 
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -69,7 +63,7 @@ public class BaseActivity extends ActionBarActivity {
         // set a custom shadow that overlays the main content when the drawer opens
         //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        _items = new ArrayList<Items>();
+        _items = new ArrayList<>();
         _items.add(new Items(getString(R.string.title_section1), null, R.drawable.ic_drawer));
         _items.add(new Items(getString(R.string.title_section2), null, R.drawable.puzzle_splash));
         _items.add(new Items(getString(R.string.title_section3), null, R.drawable.ic_drawer));
@@ -77,8 +71,9 @@ public class BaseActivity extends ActionBarActivity {
         _items.add(new Items(getString(R.string.title_section5), null, R.drawable.ic_drawer));
         _items.add(new Items(getString(R.string.title_section6), null, R.drawable.puzzle_splash));
         _items.add(new Items(getString(R.string.title_section7), null, R.drawable.ic_drawer));
+        _items.add(new Items(getString(R.string.action_settings), null, R.drawable.ic_action_settings));
 
-        View header = (View) getLayoutInflater().inflate(R.layout.list_view_header_layout, null);
+        View header = getLayoutInflater().inflate(R.layout.list_view_header_layout, null);
         mDrawerList.addHeaderView(header);
 
         mDrawerList.setAdapter(new NavigationDrawerListAdapter(this, _items));
@@ -155,8 +150,8 @@ public class BaseActivity extends ActionBarActivity {
                 startActivity(intent);
                 break;
             case 3:
-                intent = new Intent(this, ShowPage.class);
-                intent.putExtra(ShowPage.ARG_SECTION_NUMBER, "41");
+                intent = new Intent(this, GalleryActivity.class);
+//                intent.putExtra(ShowPage.ARG_SECTION_NUMBER, "41");
                 startActivity(intent);
                 break;
             case 4:
@@ -178,6 +173,14 @@ public class BaseActivity extends ActionBarActivity {
                 intent = new Intent(this, ShowPage.class);
                 //intent.putExtra(ShowPage.ARG_SECTION_NUMBER, "26");
                 intent.putExtra(ShowPage.ARG_SECTION_NUMBER, "contatti.html");
+                startActivity(intent);
+                break;
+            case 8:
+//                getFragmentManager().beginTransaction().replace(android.R.id.content,
+//                        new SettingsActivity()).commit();
+                intent = new Intent(this, SettingsActivity.class);
+                //intent.putExtra(ShowPage.ARG_SECTION_NUMBER, "26");
+//                intent.putExtra(ShowPage.ARG_SECTION_NUMBER, "contatti.html");
                 startActivity(intent);
                 break;
             default:
@@ -226,7 +229,7 @@ public class BaseActivity extends ActionBarActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 //            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
 
-        callbackManager = CallbackManager.Factory.create();
+        CallbackManager callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {

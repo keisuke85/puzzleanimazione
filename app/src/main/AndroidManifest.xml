@@ -32,6 +32,9 @@
 
         <activity android:name=".HomeActivity" />
         <activity android:name=".ShowPage" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".GalleryActivity" />
+        <activity android:name=".GalleryDetailActivity" />
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
